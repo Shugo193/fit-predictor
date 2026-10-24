@@ -28,21 +28,45 @@ const EVALUATION = {
   length: ["短い", "やや短い", "ちょうど", "やや長い", "長い"],
 };
 
-function displayPoints(points, container) {
-  container.innerHTML = "";
+function displayPoints(points, pointArea) {
+  pointArea.innerHTML = "";
+
   for (const point of points) {
     const { key, label, type } = point;
-    const p = document.createElement("p");
-    p.textContent = label;
-    container.appendChild(p);
+    const pointsDiv = document.createElement("div");
+
+    const span = document.createElement("span");
+    span.textContent = label;
+
+    const sizeInput = document.createElement("input");
+    sizeInput.id = `${key}SizeInput`;
+    sizeInput.type = "number";
+
+    const fitSelect = document.createElement("select");
+    fitSelect.id = `${key}FitSelect`;
+
+    EVALUATION[type].forEach((word, index) => {
+      const option = document.createElement("option");
+      option.textContent = word;
+      option.value = index - 2;
+      fitSelect.appendChild(option);
+    });
+    fitSelect.value = 0
+
+    pointsDiv.append(span, sizeInput, fitSelect);
+    pointArea.appendChild(pointsDiv);
   }
 }
 
-const container = document.querySelector("#points");
-const select = document.querySelector("#category");
+const pointArea = document.querySelector("#points");
+const categorySelect = document.querySelector("#category");
 
-displayPoints(CATEGORIES[select.value].points, container);
+displayPoints(CATEGORIES[categorySelect.value].points, pointArea);
 
-select.addEventListener("change", () => {
-  displayPoints(CATEGORIES[select.value].points, container);
+categorySelect.addEventListener("change", () => {
+  displayPoints(CATEGORIES[categorySelect.value].points, pointArea);
+});
+
+pointArea.addEventListener("change", function (event) {
+  console.log(event.target.value);
 });
