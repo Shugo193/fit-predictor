@@ -51,15 +51,16 @@ function displayPoints(points, pointArea) {
       option.value = index - 2;
       fitSelect.appendChild(option);
     });
-    fitSelect.value = 0
+    fitSelect.value = 0;
 
     pointsDiv.append(span, sizeInput, fitSelect);
     pointArea.appendChild(pointsDiv);
   }
 }
 
-const pointArea = document.querySelector("#points");
-const categorySelect = document.querySelector("#category");
+const pointArea = document.getElementById("points");
+const categorySelect = document.getElementById("category");
+const registerButton = document.getElementById("registerButton");
 
 displayPoints(CATEGORIES[categorySelect.value].points, pointArea);
 
@@ -67,6 +68,25 @@ categorySelect.addEventListener("change", () => {
   displayPoints(CATEGORIES[categorySelect.value].points, pointArea);
 });
 
-pointArea.addEventListener("change", function (event) {
-  console.log(event.target.value);
+registerButton.addEventListener("click", () => {
+  const clothesInformation = {};
+  clothesInformation.name = document.getElementById("name").value;
+  clothesInformation.category = categorySelect.value;
+  clothesInformation.memo = document.getElementById("memo").value;
+  clothesInformation.measurement = {};
+  for (const point of CATEGORIES[categorySelect.value].points) {
+    const key = point.key;
+
+    let sizeInputed = null;
+    let fitSelected = null;
+
+    const sizeInput = document.getElementById(`${key}SizeInput`);
+    if (sizeInput.value !== "") {
+      sizeInputed = Number(sizeInput.value);
+      fitSelected = Number(document.getElementById(`${key}FitSelect`).value);
+    }
+    clothesInformation.measurement[key] = { cmValue: sizeInputed, fitEvaluation: fitSelected };
+  }
+
+  console.log(clothesInformation);
 });
