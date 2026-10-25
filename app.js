@@ -57,12 +57,49 @@ function displayPoints(points, pointArea) {
     pointArea.appendChild(pointsDiv);
   }
 }
+
+function displayAllData(db, allDataArea) {
+  allDataArea.innerHTML = "";
+  const transaction = db.transaction("clothes", "readonly");
+  const store = transaction.objectStore("clothes");
+  const getRequest = store.getAll();
+
+  getRequest.onsuccess = () => {
+    for (const data of getRequest.result) {
+      const { name, category, memo, measurements, id } = data;
+      
+      const clothesDiv = document.createElement("div");
+      const nameP = document.createElement("p");
+      nameP.textContent = `名前：${name}`;
+      const categoryP = document.createElement("p");
+      categoryP.textContent = CATEGORIES[category].label;
+      const memoP = document.createElement("p");
+      memoP.textContent = memo;
+
+      const pointsDiv = document.createElement("div");
+      for (const point of CATEGORIES[category].points) {
+        const { key, label, type } = point;
+        const { cmValue, fitEvaluation } = measurements[key];
+
+        const p = document.createElement("p");
+        if (cmValue !== null) {
+          p.textContent = `${label}：${cmValue}cm、 ${EVALUATION[type][fitEvaluation + 2]}`;
+        } else {
+          p.textContent = `${label}:入力なし`;
+        }
+        pointsDiv.appendChild(p);
+      }
+      clothesDiv.append(nameP, categoryP, pointsDiv, memoP);
+      allDataArea.appendChild(clothesDiv);
+    }
+  };
+}
 //indexedDB
 const requestOpen = indexedDB.open("clothesDB", 1);
 let db;
 requestOpen.onupgradeneeded = (event) => {
-  const dataBase = event.target.result;
-  dataBase.createObjectStore("clothes", { keyPath: "id", autoIncrement: true });
+  const database = event.target.result;
+  database.createObjectStore("clothes", { keyPath: "id", autoIncrement: true });
 };
 
 requestOpen.onerror = (event) => {
@@ -71,11 +108,13 @@ requestOpen.onerror = (event) => {
 
 requestOpen.onsuccess = (event) => {
   db = event.target.result;
+  displayAllData(db, allDataArea);
 };
 
 const pointArea = document.getElementById("points");
 const categorySelect = document.getElementById("category");
 const registerButton = document.getElementById("registerButton");
+const allDataArea = document.getElementById("allData");
 
 displayPoints(CATEGORIES[categorySelect.value].points, pointArea);
 
@@ -88,7 +127,7 @@ registerButton.addEventListener("click", () => {
   clothesInformation.name = document.getElementById("name").value;
   clothesInformation.category = categorySelect.value;
   clothesInformation.memo = document.getElementById("memo").value;
-  clothesInformation.measurement = {};
+  clothesInformation.measurements = {};
   for (const point of CATEGORIES[categorySelect.value].points) {
     const key = point.key;
 
@@ -100,15 +139,15 @@ registerButton.addEventListener("click", () => {
       sizeInputed = Number(sizeInput.value);
       fitSelected = Number(document.getElementById(`${key}FitSelect`).value);
     }
-    clothesInformation.measurement[key] = { cmValue: sizeInputed, fitEvaluation: fitSelected };
+    clothesInformation.measurements[key] = { cmValue: sizeInputed, fitEvaluation: fitSelected };
   }
-
 
   const transaction = db.transaction("clothes", "readwrite");
   const store = transaction.objectStore("clothes");
-  const requestStore = store.add(clothesInformation);
+  const storeRequest = store.add(clothesInformation);
 
-  requestStore.onsuccess = (event) => {
+  storeRequest.onsuccess = (event) => {
     console.log("保存しました。");
+    displayAllData(db, allDataArea);
   };
 });
