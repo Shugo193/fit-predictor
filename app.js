@@ -57,6 +57,21 @@ function displayPoints(points, pointArea) {
     pointArea.appendChild(pointsDiv);
   }
 }
+//indexedDB
+const requestOpen = indexedDB.open("clothesDB", 1);
+let db;
+requestOpen.onupgradeneeded = (event) => {
+  const dataBase = event.target.result;
+  dataBase.createObjectStore("clothes", { keyPath: "id", autoIncrement: true });
+};
+
+requestOpen.onerror = (event) => {
+  console.error("failed");
+};
+
+requestOpen.onsuccess = (event) => {
+  db = event.target.result;
+};
 
 const pointArea = document.getElementById("points");
 const categorySelect = document.getElementById("category");
@@ -88,5 +103,12 @@ registerButton.addEventListener("click", () => {
     clothesInformation.measurement[key] = { cmValue: sizeInputed, fitEvaluation: fitSelected };
   }
 
-  console.log(clothesInformation);
+
+  const transaction = db.transaction("clothes", "readwrite");
+  const store = transaction.objectStore("clothes");
+  const requestStore = store.add(clothesInformation);
+
+  requestStore.onsuccess = (event) => {
+    console.log("保存しました。");
+  };
 });
