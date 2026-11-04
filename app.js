@@ -1,6 +1,6 @@
 import { CATEGORIES } from "./categories.js";
 import { EVALUATION } from "./categories.js";
-import { openDB } from "./db.js";
+import { openDB, getAllClothes, addClothes } from "./db.js";
 
 function displayPoints(points, pointArea) {
   pointArea.innerHTML = "";
@@ -34,12 +34,9 @@ function displayPoints(points, pointArea) {
 
 function displayAllData(db, allDataArea) {
   allDataArea.innerHTML = "";
-  const transaction = db.transaction("clothes", "readonly");
-  const store = transaction.objectStore("clothes");
-  const getRequest = store.getAll();
 
-  getRequest.onsuccess = () => {
-    for (const data of getRequest.result) {
+  getAllClothes(db, (result) => {
+    for (const data of result) {
       const { name, category, memo, measurements, id } = data;
 
       const clothesDiv = document.createElement("div");
@@ -66,7 +63,7 @@ function displayAllData(db, allDataArea) {
       clothesDiv.append(nameP, categoryP, pointsDiv, memoP);
       allDataArea.appendChild(clothesDiv);
     }
-  };
+  });
 }
 
 const pointArea = document.getElementById("points");
@@ -77,7 +74,7 @@ let mainDatabase;
 
 openDB((db) => {
   displayAllData(db, allDataArea);
-  mainDatabase = db
+  mainDatabase = db;
 });
 displayPoints(CATEGORIES[categorySelect.value].points, pointArea);
 
@@ -105,12 +102,7 @@ registerButton.addEventListener("click", () => {
     clothesInformation.measurements[key] = { cmValue: sizeInputed, fitEvaluation: fitSelected };
   }
 
-  const transaction = mainDatabase.transaction("clothes", "readwrite");
-  const store = transaction.objectStore("clothes");
-  const storeRequest = store.add(clothesInformation);
-
-  storeRequest.onsuccess = (event) => {
-    console.log("保存しました。");
+  addClothes(mainDatabase, clothesInformation, () => {
     displayAllData(mainDatabase, allDataArea);
-  };
+  });
 });

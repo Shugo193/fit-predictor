@@ -1,4 +1,4 @@
-export function openDB(whenOpened) {
+export function openDB(whenLoaded) {
   const requestOpen = indexedDB.open("clothesDB", 1);
   let db;
   requestOpen.onupgradeneeded = (event) => {
@@ -12,6 +12,26 @@ export function openDB(whenOpened) {
 
   requestOpen.onsuccess = (event) => {
     db = event.target.result;
-    whenOpened(db);
+    whenLoaded(db);
+  };
+}
+
+export function getAllClothes(db, whenRead) {
+  const transaction = db.transaction("clothes", "readonly");
+  const store = transaction.objectStore("clothes");
+
+  const getRequest = store.getAll();
+  getRequest.onsuccess = () => {
+    whenRead(getRequest.result);
+  };
+}
+export function addClothes(db, clothesInformation, whenAdded) {
+  const transaction = db.transaction("clothes", "readwrite");
+  const store = transaction.objectStore("clothes");
+  const storeRequest = store.add(clothesInformation);
+
+  storeRequest.onsuccess = (event) => {
+    console.log("保存しました。");
+    whenAdded();
   };
 }
