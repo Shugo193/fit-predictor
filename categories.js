@@ -22,3 +22,8 @@ export const CATEGORIES = {
     ],
   },
 };
+
+export const EVALUATION = {
+  width: ["きつい", "ややきつい", "ちょうど", "ややゆるい", "ゆるい"],
+  length: ["短い", "やや短い", "ちょうど", "やや長い", "長い"],
+};

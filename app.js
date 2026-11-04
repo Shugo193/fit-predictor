@@ -1,9 +1,6 @@
-import {CATEGORIES}  from "./categories.js";
-
-const EVALUATION = {
-  width: ["きつい", "ややきつい", "ちょうど", "ややゆるい", "ゆるい"],
-  length: ["短い", "やや短い", "ちょうど", "やや長い", "長い"],
-};
+import { CATEGORIES } from "./categories.js";
+import { EVALUATION } from "./categories.js";
+import { openDB } from "./db.js";
 
 function displayPoints(points, pointArea) {
   pointArea.innerHTML = "";
@@ -44,7 +41,7 @@ function displayAllData(db, allDataArea) {
   getRequest.onsuccess = () => {
     for (const data of getRequest.result) {
       const { name, category, memo, measurements, id } = data;
-      
+
       const clothesDiv = document.createElement("div");
       const nameP = document.createElement("p");
       nameP.textContent = `名前：${name}`;
@@ -71,28 +68,17 @@ function displayAllData(db, allDataArea) {
     }
   };
 }
-//indexedDB
-const requestOpen = indexedDB.open("clothesDB", 1);
-let db;
-requestOpen.onupgradeneeded = (event) => {
-  const database = event.target.result;
-  database.createObjectStore("clothes", { keyPath: "id", autoIncrement: true });
-};
-
-requestOpen.onerror = (event) => {
-  console.error("failed");
-};
-
-requestOpen.onsuccess = (event) => {
-  db = event.target.result;
-  displayAllData(db, allDataArea);
-};
 
 const pointArea = document.getElementById("points");
 const categorySelect = document.getElementById("category");
 const registerButton = document.getElementById("registerButton");
 const allDataArea = document.getElementById("allData");
+let mainDatabase;
 
+openDB((db) => {
+  displayAllData(db, allDataArea);
+  mainDatabase = db
+});
 displayPoints(CATEGORIES[categorySelect.value].points, pointArea);
 
 categorySelect.addEventListener("change", () => {
@@ -119,13 +105,12 @@ registerButton.addEventListener("click", () => {
     clothesInformation.measurements[key] = { cmValue: sizeInputed, fitEvaluation: fitSelected };
   }
 
-  const transaction = db.transaction("clothes", "readwrite");
+  const transaction = mainDatabase.transaction("clothes", "readwrite");
   const store = transaction.objectStore("clothes");
   const storeRequest = store.add(clothesInformation);
 
   storeRequest.onsuccess = (event) => {
     console.log("保存しました。");
-    displayAllData(db, allDataArea);
-
+    displayAllData(mainDatabase, allDataArea);
   };
 });
