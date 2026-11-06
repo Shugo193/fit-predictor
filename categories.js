@@ -27,3 +27,8 @@ export const EVALUATION = {
   width: ["きつい", "ややきつい", "ちょうど", "ややゆるい", "ゆるい"],
   length: ["短い", "やや短い", "ちょうど", "やや長い", "長い"],
 };
+
+export const COMPARE = {
+  width: ["きつめ", "ゆるめ"],
+  length:["短め", "長め"]
+}
