@@ -9,12 +9,12 @@ function displayPoints(points, pointArea) {
     const { key, label, type } = point;
     const pointsDiv = document.createElement("div");
 
-    const span = document.createElement("span");
-    span.textContent = label;
-
     const sizeInput = document.createElement("input");
+    const inputLabel = document.createElement("label");
+    inputLabel.textContent = `${label}：`;
     sizeInput.id = `${key}SizeInput`;
     sizeInput.type = "number";
+    inputLabel.htmlFor = `${key}SizeInput`;
 
     const fitSelect = document.createElement("select");
     fitSelect.id = `${key}FitSelect`;
@@ -27,7 +27,7 @@ function displayPoints(points, pointArea) {
     });
     fitSelect.value = 0;
 
-    pointsDiv.append(span, sizeInput, fitSelect);
+    pointsDiv.append(inputLabel, sizeInput, fitSelect);
     pointArea.appendChild(pointsDiv);
   }
 }

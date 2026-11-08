@@ -11,14 +11,14 @@ function displayPoints(points, pointArea) {
     const { key, label, type } = point;
     const pointsDiv = document.createElement("div");
 
-    const span = document.createElement("span");
-    span.textContent = label;
-
     const sizeInput = document.createElement("input");
+    const inputLabel = document.createElement("label");
+    inputLabel.textContent = `${label}：`;
     sizeInput.id = `${key}SizeInput`;
     sizeInput.type = "number";
+    inputLabel.htmlFor = `${key}SizeInput`;
 
-    pointsDiv.append(span, sizeInput);
+    pointsDiv.append(inputLabel, sizeInput);
     pointArea.appendChild(pointsDiv);
   }
 }
@@ -90,7 +90,6 @@ startButton.addEventListener("click", () => {
           row.forEach((item) => {
             const td = document.createElement("td");
             td.textContent = item;
-            td.style.textAlign = "center";
             tr.appendChild(td);
           });
           table.appendChild(tr);

@@ -2,11 +2,14 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="./style.css" />
+
     <title>服のサイズ予測</title>
   </head>
 
   <body>
-    <a href="index.html">homeへ行く</a>
+    <a href="index.html">服を登録する</a>
     <h1>服のサイズ予測</h1>
     <select id="category">
       <option value="tops">トップス</option>
@@ -14,11 +17,11 @@
     </select>
 
     <div>
-      <div>name<input id="name" type="text" /></div>
+      <div><label id="nameLabel" for="name">名前：</label> <input id="name" type="text" /></div>
       <div id="points"></div>
       <button id="startButton">比較</button>
     </div>
-    <div id = "compareArea"></div>
+    <div id="compareArea"></div>
     <script type="module" src="compare.js"></script>
   </body>
 </html>
