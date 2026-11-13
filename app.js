@@ -57,7 +57,7 @@ function displayAllData(db, allDataArea) {
         if (cmValue !== null) {
           p.textContent = `${label}：${cmValue}cm、 ${EVALUATION[type][fitEvaluation + 2]}`;
         } else {
-          p.textContent = `${label}:入力なし`;
+          p.textContent = `${label}：入力なし`;
         }
         pointsDiv.appendChild(p);
       }

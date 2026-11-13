@@ -10,6 +10,7 @@ function displayPoints(points, pointArea) {
   for (const point of points) {
     const { key, label, type } = point;
     const pointsDiv = document.createElement("div");
+    pointsDiv.classList.add("input-row");
 
     const sizeInput = document.createElement("input");
     const inputLabel = document.createElement("label");
