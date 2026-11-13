@@ -1,3 +1,148 @@
-td{
-    text-align: center;
+:root {
+  --background-color: #fdfcf8;
+  --font-color: #292923;
+  --highlight-color: #f5c928;
+  --line-color: #c9c7bf;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--font-color);
+}
+
+h1::after {
+  content: "";
+  display: block;
+  height: 30px;
+  background-color: var(--highlight-color);
+  background-image:
+    repeating-linear-gradient(90deg, var(--font-color) 0px, var(--font-color) 1px, transparent 1px, transparent 10px),
+    repeating-linear-gradient(90deg, var(--font-color) 0px, var(--font-color) 1px, transparent 1px, transparent 50px);
+  background-size:
+    10px 10px,
+    50px 20px;
+  background-repeat: repeat-x;
+  transform: scaleY(-1);
+}
+.input-row {
+  display: grid;
+  grid-template-columns: 5em auto max-content;
+  gap: 1em;
+}
+td {
+  text-align: center;
+}
+.center-td {
+  background-color: var(--highlight-color);
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5em 1em;
+  font-size: 15px;
+  color: var(--font-color);
+  background: var(--highlight-color);
+  border: none;
+  border-bottom: solid 4px var(--font-color);
+  border-radius: 3px;
+}
+
+.btn:active {
+  transform: translateY(4px);
+  border-bottom: none;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--background-color);
+  border: 1px solid var(--line-color);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.fab {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-bottom: solid 6px var(--font-color);
+  border-radius: 3px;
+  background-color: var(--highlight-color);
+  color: var(--font-color);
+  font-size: 30px;
+}
+
+.fab:active {
+  transform: translateY(4px);
+  border-bottom: none;
+}
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--background-color) 80%, transparent);
+
+  justify-content: center;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal {
+  background: var(--background-color);
+  width: 100%;
+  height: fit-content;
+  max-width: 400px;
+
+  padding: 25px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  box-shadow: 0 8px 30px #0003
+}
+
+.close-btn {
+  padding: 0.5em 1em;
+  font-size: 15px;
+  color: var(--font-color);
+  background: var(--highlight-color);
+  border: none;
+  border-bottom: solid 4px var(--font-color);
+  border-radius: 3px;
+}
+
+.close-btn:active {
+  transform: translateY(4px);
+  border-bottom: none;
+}
+
+.toast {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translate(-50%, 20px);
+
+  background: var(--highlight-color);
+  color: var(--font-color);
+  padding: 5px 10px;
+  border-bottom: solid 4px var(--font-color);
+
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
 }

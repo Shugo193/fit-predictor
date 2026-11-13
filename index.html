@@ -10,27 +10,38 @@
 
   <body>
     <a href="compare.html">服を比較する</a>
+
     <h1>服の登録</h1>
+    <div id="allData" class="card-container"></div>
+    <button class="fab" id="openModalBtn">+</button>
 
-    <select id="category">
-      <option value="tops">トップス</option>
-      <option value="pants">パンツ</option>
-    </select>
-
-    <div>
-      <div>
-        <label id="nameLabel" for="name">名前：</label>
-        <input id="name" type="text" />
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>新しい服を登録</h3>
+          <button class="close-btn" id="closeModalBtn">×</button>
+        </div>
+        <select id="category">
+          <option value="tops">トップス</option>
+          <option value="pants">パンツ</option>
+        </select>
+        <div class="input-row">
+          <label id="nameLabel" for="name">名前：</label>
+          <input id="name" type="text" />
+        </div>
+        <div id="points"></div>
+        <div class="input-row">
+          <label id="memoLabel" for="memo">メモ：</label>
+          <textarea id="memo"></textarea>
+        </div>
+        <button id="registerButton" class="btn">登録</button>
       </div>
-      <div id="points"></div>
-      <div>
-        <label id="memoLabel" for="memo">メモ：</label>
-        <textarea id="memo"></textarea>
-      </div>
-      <button id="registerButton">登録</button>
+    </div>
+    <div id="toast" class="toast">
+      <span>登録しました！</span>
     </div>
 
-    <div id="allData"></div>
+
     <script type="module" src="app.js"></script>
   </body>
 </html>

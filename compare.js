@@ -87,9 +87,12 @@ startButton.addEventListener("click", () => {
         }
         rows.forEach((row) => {
           const tr = document.createElement("tr");
-          row.forEach((item) => {
+          row.forEach((item, index) => {
             const td = document.createElement("td");
             td.textContent = item;
+            if (index === 2) {
+              td.classList.add("center-td");
+            }
             tr.appendChild(td);
           });
           table.appendChild(tr);

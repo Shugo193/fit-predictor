@@ -8,6 +8,7 @@ function displayPoints(points, pointArea) {
   for (const point of points) {
     const { key, label, type } = point;
     const pointsDiv = document.createElement("div");
+    pointsDiv.classList.add("input-row");
 
     const sizeInput = document.createElement("input");
     const inputLabel = document.createElement("label");
@@ -61,6 +62,7 @@ function displayAllData(db, allDataArea) {
         pointsDiv.appendChild(p);
       }
       clothesDiv.append(nameP, categoryP, pointsDiv, memoP);
+      clothesDiv.classList.add("card");
       allDataArea.appendChild(clothesDiv);
     }
   });
@@ -70,6 +72,10 @@ const pointArea = document.getElementById("points");
 const categorySelect = document.getElementById("category");
 const registerButton = document.getElementById("registerButton");
 const allDataArea = document.getElementById("allData");
+const openModalBtn = document.getElementById("openModalBtn");
+const closeModalBtn = document.getElementById("closeModalBtn");
+const modalOverlay = document.getElementById("modalOverlay");
+const toast = document.getElementById("toast");
 let mainDatabase;
 
 openDB((db) => {
@@ -80,6 +86,14 @@ displayPoints(CATEGORIES[categorySelect.value].points, pointArea);
 
 categorySelect.addEventListener("change", () => {
   displayPoints(CATEGORIES[categorySelect.value].points, pointArea);
+});
+
+openModalBtn.addEventListener("click", () => {
+  modalOverlay.classList.add("active");
+});
+
+closeModalBtn.addEventListener("click", () => {
+  modalOverlay.classList.remove("active");
 });
 
 registerButton.addEventListener("click", () => {
@@ -103,6 +117,15 @@ registerButton.addEventListener("click", () => {
   }
 
   addClothes(mainDatabase, clothesInformation, () => {
+    modalOverlay.classList.remove("active");
+    toast.classList.add("show");
+
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 1000);
     displayAllData(mainDatabase, allDataArea);
+    displayPoints(CATEGORIES[categorySelect.value].points, pointArea);
+    document.getElementById("name").value = "";
+    document.getElementById("memo").value = "";
   });
 });
